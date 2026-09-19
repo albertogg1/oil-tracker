@@ -44,7 +44,7 @@ export function StationDrawer({
   )
 
   const currentPrice = station ? getActivePrice(station, activeFuelTypeId) : null
-  const fuelTypeName = fuelTypes.find((f) => f.id === chartFuelTypeId)?.nombre
+  const fuelTypeName = fuelTypes.find((f) => f.idFuelType === chartFuelTypeId)?.nombre
 
   const chartData = history.map((entry) => ({
     date: formatDate(entry.fecha),
@@ -61,7 +61,7 @@ export function StationDrawer({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 z-40 bg-black/20 backdrop-blur-sm"
+            className="fixed inset-0 z-[800] bg-black/20 backdrop-blur-sm"
           />
 
           {/* Drawer */}
@@ -70,7 +70,7 @@ export function StationDrawer({
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-            className="fixed right-0 top-0 z-50 h-full w-full max-w-md bg-white shadow-2xl flex flex-col"
+            className="fixed right-0 top-0 z-[1000] h-full w-full sm:max-w-md bg-white shadow-2xl flex flex-col"
           >
             {/* Header */}
             <div className="flex items-start justify-between gap-4 p-6 border-b border-apple-gray3">

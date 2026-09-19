@@ -1,7 +1,8 @@
 'use client'
 
 import dynamic from 'next/dynamic'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { Fuel } from 'lucide-react'
 import { SearchBar } from '@/components/SearchBar'
 import { FiltersPanel } from '@/components/FiltersPanel'
 import { ViewToggle } from '@/components/ViewToggle'
@@ -22,6 +23,28 @@ const MapView = dynamic(
   }
 )
 
+const SESSION_KEY = 'oil-tracker-session'
+
+function loadSession(): Partial<SearchFilters> {
+  try {
+    const raw = sessionStorage.getItem(SESSION_KEY)
+    if (!raw) return {}
+    return JSON.parse(raw) as Partial<SearchFilters>
+  } catch {
+    return {}
+  }
+}
+
+function saveSession(filters: SearchFilters) {
+  try {
+    sessionStorage.setItem(SESSION_KEY, JSON.stringify({
+      location: filters.location,
+      fuelTypeId: filters.fuelTypeId,
+      radius: filters.radius,
+    }))
+  } catch {}
+}
+
 const DEFAULT_FILTERS: SearchFilters = {
   location: null,
   radius: 10,
@@ -36,22 +59,45 @@ export default function HomePage() {
   const { data: stations = [], isLoading, error } = useStations(filters)
   const { data: fuelTypes = [] } = useFuelTypes()
 
+  // Restore session after mount (avoids SSR/client mismatch)
+  useEffect(() => {
+    const saved = loadSession()
+    if (saved.location || saved.fuelTypeId || saved.radius) {
+      setFilters((prev) => ({ ...prev, ...saved }))
+    }
+  }, [])
+
+  // Persist session whenever filters change
+  useEffect(() => {
+    saveSession(filters)
+  }, [filters])
+
   function handleLocation(loc: GeoLocation) {
     setFilters((prev) => ({ ...prev, location: loc }))
   }
 
   return (
-    <div className="flex flex-col h-screen overflow-hidden">
+    <div className="flex flex-col h-dvh overflow-hidden">
       {/* Top bar */}
-      <header className="z-30 bg-white/80 backdrop-blur-xl border-b border-apple-gray3 px-4 py-3 flex flex-col gap-3">
-        <div className="flex items-center gap-3 flex-wrap">
-          <h1 className="text-lg font-bold shrink-0">
-            <span className="text-apple-blue">&#9981;</span> Precio Gasolina
+      <header className="z-30 bg-white/80 backdrop-blur-xl border-b border-apple-gray3">
+        {/* Row 1: title + view toggle */}
+        <div className="flex items-center justify-between px-4 pt-3 pb-2">
+          <h1 className="text-base font-bold flex items-center gap-1.5">
+            <Fuel size={18} className="text-apple-blue" />
+            Precio Gasolina
           </h1>
-          <SearchBar onLocation={handleLocation} />
           <ViewToggle view={view} onChange={setView} />
         </div>
-        <FiltersPanel filters={filters} onChange={setFilters} />
+
+        {/* Row 2: search */}
+        <div className="px-4 pb-2">
+          <SearchBar onLocation={handleLocation} />
+        </div>
+
+        {/* Row 3: filters */}
+        <div className="px-4 pb-3 border-t border-apple-gray3/50 pt-2">
+          <FiltersPanel filters={filters} onChange={setFilters} />
+        </div>
       </header>
 
       {/* Main content */}
@@ -59,7 +105,7 @@ export default function HomePage() {
         {/* No location state */}
         {!filters.location && (
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 text-center px-6">
-            <div className="text-6xl">&#9981;</div>
+            <div style={{ fontSize: '3rem' }}>⛽</div>
             <h2 className="text-2xl font-bold">Encuentra la gasolina más barata</h2>
             <p className="text-apple-gray1 max-w-sm">
               Busca tu ciudad o permite el acceso a tu ubicación para ver los precios cerca de ti.
@@ -87,10 +133,11 @@ export default function HomePage() {
 
         {/* Map view */}
         {filters.location && !isLoading && !error && view === 'map' && (
-          <div className="absolute inset-0 p-4">
+          <div className="absolute inset-0 sm:p-4">
             <MapView
               stations={stations}
               center={filters.location}
+              radius={filters.radius}
               activeFuelTypeId={filters.fuelTypeId}
               onStationClick={setSelectedStation}
             />

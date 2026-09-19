@@ -22,7 +22,7 @@ export function ViewToggle({ view, onChange }: ViewToggleProps) {
           }`}
         >
           {mode === 'map' ? <Map size={15} /> : <List size={15} />}
-          {mode === 'map' ? 'Mapa' : 'Lista'}
+          <span className="hidden sm:inline">{mode === 'map' ? 'Mapa' : 'Lista'}</span>
         </button>
       ))}
     </div>

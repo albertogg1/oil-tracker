@@ -1,7 +1,7 @@
 // types/index.ts
 
 export interface FuelType {
-  id: number
+  idFuelType: number
   nombre: string
 }
 

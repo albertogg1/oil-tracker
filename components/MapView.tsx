@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect } from 'react'
-import { MapContainer, TileLayer, CircleMarker, Popup, useMap } from 'react-leaflet'
+import { MapContainer, TileLayer, CircleMarker, Circle, Popup, useMap } from 'react-leaflet'
 import { getPriceColor } from '@/lib/price-color'
 import { getActivePrice } from '@/components/StationCard'
 import type { Station, GeoLocation } from '@/types'
@@ -32,11 +32,12 @@ function RecenterMap({ center }: { center: GeoLocation }) {
 interface MapViewProps {
   stations: Station[]
   center: GeoLocation
+  radius: number
   activeFuelTypeId: number | null
   onStationClick: (station: Station) => void
 }
 
-export function MapView({ stations, center, activeFuelTypeId, onStationClick }: MapViewProps) {
+export function MapView({ stations, center, radius, activeFuelTypeId, onStationClick }: MapViewProps) {
   const prices = stations
     .map((s) => getActivePrice(s, activeFuelTypeId))
     .filter((p): p is number => p !== null)
@@ -47,7 +48,7 @@ export function MapView({ stations, center, activeFuelTypeId, onStationClick }: 
     <MapContainer
       center={[center.lat, center.lng]}
       zoom={13}
-      className="h-full w-full rounded-card"
+      className="h-full w-full sm:rounded-card"
       zoomControl={true}
     >
       <TileLayer
@@ -55,6 +56,13 @@ export function MapView({ stations, center, activeFuelTypeId, onStationClick }: 
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       <RecenterMap center={center} />
+
+      {/* Search radius */}
+      <Circle
+        center={[center.lat, center.lng]}
+        radius={radius * 1000}
+        pathOptions={{ color: '#007AFF', fillColor: '#007AFF', fillOpacity: 0.12, weight: 1.5, dashArray: '6 4' }}
+      />
 
       {/* User location marker */}
       <CircleMarker
