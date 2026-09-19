@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { MapPin, Navigation } from 'lucide-react'
 import { useGeocoder } from '@/hooks/useGeocoder'
-import type { GeoLocation } from '@/types'
+import type { GeoLocation, NominatimResult } from '@/types'
 
 interface SearchBarProps {
   onLocation: (loc: GeoLocation) => void
@@ -28,7 +28,7 @@ export function SearchBar({ onLocation }: SearchBarProps) {
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
-  function handleSelectSuggestion(result: { lat: string; lon: string; display_name: string }) {
+  function handleSelectSuggestion(result: NominatimResult) {
     setQuery(result.display_name.split(',')[0])
     setOpen(false)
     onLocation({ lat: parseFloat(result.lat), lng: parseFloat(result.lon) })
