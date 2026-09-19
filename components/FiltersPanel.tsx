@@ -17,7 +17,7 @@ export function FiltersPanel({ filters, onChange }: FiltersPanelProps) {
   }
 
   function setRadius(value: number) {
-    onChange({ ...filters, radius: Math.min(50, Math.max(1, value)) })
+    onChange({ ...filters, radius: Math.min(30, Math.max(1, value)) })
   }
 
   return (
@@ -27,7 +27,7 @@ export function FiltersPanel({ filters, onChange }: FiltersPanelProps) {
         value={filters.fuelTypeId?.toString() ?? 'all'}
         onChange={(e) => setFuelType(e.target.value)}
         disabled={isLoading}
-        className="rounded-pill border border-apple-gray3 bg-white px-3 py-2 text-sm font-medium shadow-card outline-none focus:ring-2 focus:ring-apple-blue/30 disabled:opacity-50 shrink-0 max-w-[160px]"
+        className="rounded-pill border border-apple-gray3 bg-white px-3 py-2 text-sm font-medium shadow-card outline-none focus:ring-2 focus:ring-apple-blue/30 disabled:opacity-30 shrink-0 max-w-[160px]"
       >
         <option value="all">Todos</option>
         {fuelTypes.map((ft) => (
@@ -50,7 +50,7 @@ export function FiltersPanel({ filters, onChange }: FiltersPanelProps) {
           {/* Tooltip */}
           <div
             className="absolute top-0 -translate-x-1/2 pointer-events-none"
-            style={{ left: `calc(${((filters.radius - 1) / 49) * 100}% + ${(0.5 - (filters.radius - 1) / 49) * 14}px)` }}
+            style={{ left: `calc(${((filters.radius - 1) / 29) * 100}% + ${(0.5 - (filters.radius - 1) / 29) * 14}px)` }}
           >
             <div className="bg-apple-blue text-white text-[10px] font-semibold px-1.5 py-0.5 rounded-full tabular-nums whitespace-nowrap">
               {filters.radius} km
@@ -59,7 +59,7 @@ export function FiltersPanel({ filters, onChange }: FiltersPanelProps) {
           <input
             type="range"
             min={1}
-            max={50}
+            max={30}
             step={1}
             value={filters.radius}
             onChange={(e) => setRadius(parseInt(e.target.value))}
@@ -68,7 +68,7 @@ export function FiltersPanel({ filters, onChange }: FiltersPanelProps) {
         </div>
         <button
           onClick={() => setRadius(filters.radius + 1)}
-          disabled={filters.radius >= 50}
+          disabled={filters.radius >= 30}
           className="text-apple-gray1 hover:text-apple-blue active:scale-95 transition-all disabled:opacity-30 disabled:cursor-not-allowed shrink-0 pb-px"
         >
           <Plus size={13} />

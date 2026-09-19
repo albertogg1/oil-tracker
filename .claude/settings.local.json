@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:api.precioil.es)",
+      "Bash(bash:*)",
+      "Bash(npx create-next-app@14:*)",
+      "Bash(cp:*)",
+      "Bash(npx shadcn@latest:*)",
+      "Bash(npm test:*)",
+      "Bash(node:*)",
+      "Bash(npx jest:*)"
+    ]
+  }
+}
