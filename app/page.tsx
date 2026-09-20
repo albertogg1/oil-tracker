@@ -47,7 +47,7 @@ function saveSession(filters: SearchFilters) {
 
 const DEFAULT_FILTERS: SearchFilters = {
   location: null,
-  radius: 10,
+  radius: 5,
   fuelTypeId: null,
 }
 

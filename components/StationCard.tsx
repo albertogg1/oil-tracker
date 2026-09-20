@@ -1,6 +1,7 @@
 'use client'
 
 import { MapPin } from 'lucide-react'
+import { openNavigation } from '@/lib/nav-url'
 import type { Station, PriceColor } from '@/types'
 
 interface StationCardProps {
@@ -42,15 +43,12 @@ export function StationCard({ station, activeFuelTypeId, priceColor, onClick }: 
           <p className="font-semibold text-sm truncate">{station.nombre}</p>
           <div className="flex items-center gap-1 mt-0.5">
             <MapPin size={12} className="text-apple-gray1 shrink-0" />
-            <a
-              href={`geo:${station.latitud},${station.longitud}?q=${station.latitud},${station.longitud}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={(e) => e.stopPropagation()}
-              className="text-xs text-apple-gray1 truncate hover:text-apple-blue hover:underline"
+            <button
+              onClick={(e) => { e.stopPropagation(); openNavigation(station.latitud, station.longitud) }}
+              className="text-xs text-apple-gray1 truncate hover:text-apple-blue hover:underline text-left"
             >
               {station.direccion}
-            </a>
+            </button>
           </div>
           <p className="text-xs text-apple-gray2 mt-0.5">{station.municipio}</p>
         </div>
