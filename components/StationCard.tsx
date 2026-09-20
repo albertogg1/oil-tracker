@@ -42,7 +42,15 @@ export function StationCard({ station, activeFuelTypeId, priceColor, onClick }: 
           <p className="font-semibold text-sm truncate">{station.nombre}</p>
           <div className="flex items-center gap-1 mt-0.5">
             <MapPin size={12} className="text-apple-gray1 shrink-0" />
-            <p className="text-xs text-apple-gray1 truncate">{station.direccion}</p>
+            <a
+              href={`geo:${station.latitud},${station.longitud}?q=${station.latitud},${station.longitud}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              className="text-xs text-apple-gray1 truncate hover:text-apple-blue hover:underline"
+            >
+              {station.direccion}
+            </a>
           </div>
           <p className="text-xs text-apple-gray2 mt-0.5">{station.municipio}</p>
         </div>

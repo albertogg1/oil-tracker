@@ -78,7 +78,14 @@ export function StationDrawer({
                 <h2 className="text-lg font-semibold leading-tight truncate">{station.nombre}</h2>
                 <div className="flex items-center gap-1 mt-1">
                   <MapPin size={13} className="text-apple-gray1 shrink-0" />
-                  <p className="text-sm text-apple-gray1 truncate">{station.direccion}</p>
+                  <a
+                    href={`geo:${station.latitud},${station.longitud}?q=${station.latitud},${station.longitud}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-apple-gray1 truncate hover:text-apple-blue hover:underline"
+                  >
+                    {station.direccion}
+                  </a>
                 </div>
                 <p className="text-sm text-apple-gray2 mt-0.5">{station.municipio}, {station.provincia}</p>
               </div>
